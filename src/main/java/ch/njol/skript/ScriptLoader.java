@@ -490,7 +490,7 @@ public class ScriptLoader {
 				}
 				
 				if (scriptInfo.files == 0)
-					Skript.warning(m_no_scripts.toString());
+					SkriptLogger.log(new LogEntry(Level.WARNING, m_no_scripts.toString(), null));
 				if (Skript.logNormal() && scriptInfo.files > 0)
 					Skript.info(m_scripts_loaded.toString(
 						scriptInfo.files,
