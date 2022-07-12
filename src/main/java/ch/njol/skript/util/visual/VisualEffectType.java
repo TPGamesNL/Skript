@@ -162,17 +162,10 @@ public class VisualEffectType implements YggdrasilSerializable {
 		VisualEffectType type = new VisualEffectType(effect);
 		String node = LANGUAGE_NODE + "." + type.getId();
 
-		String pattern;
-
-		BlockingLogHandler logHandler = SkriptLogger.startLogHandler(new BlockingLogHandler());
-		try {
-			pattern = Language.get_(node + ".pattern");
-		} finally {
-			logHandler.stop();
-		}
-
-		if (pattern == null)
+		if (!Language.keyExistsDefault(node + ".pattern"))
 			return null;
+
+		String pattern = Language.get(node + ".pattern");
 
 		type.name = new Noun(node + ".name");
 
