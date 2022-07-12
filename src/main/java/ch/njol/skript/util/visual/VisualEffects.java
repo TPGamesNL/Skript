@@ -62,8 +62,7 @@ import java.util.stream.Stream;
 
 public class VisualEffects {
 
-	private static final boolean BLOCK_DATA_EXISTS = Skript.classExists("org.bukkit.block.data.BlockData");
-	private static final boolean DUST_OPTIONS_EXISTS = Skript.classExists("org.bukkit.Particle$DustOptions");
+	private static final boolean DUST_OPTIONS_EXISTS = true;
 
 	private static final Map<String, Consumer<VisualEffectType>> effectTypeModifiers = new HashMap<>();
 	private static VisualEffectType[] visualEffectTypes;
@@ -163,11 +162,7 @@ public class VisualEffects {
 				Color color = raw[0] == null ? defaultColor : (Color) raw[0];
 				float size = raw[1] == null ? defaultSize : ((Number) raw[1]).floatValue();
 
-				if (DUST_OPTIONS_EXISTS && Particle.REDSTONE.getDataType() == Particle.DustOptions.class) {
-					return new Particle.DustOptions(color.asBukkitColor(), size);
-				} else {
-					return new ParticleOption(color, size);
-				}
+				return new Particle.DustOptions(color.asBukkitColor(), size);
 			});
 			registerDataSupplier("Particle.NOTE", (raw, location) -> {
 				int colorValue = (int) (((Number) raw[0]).floatValue() * 255);
@@ -195,17 +190,7 @@ public class VisualEffects {
 					return Material.STONE.getData();
 				} else if (raw[0] instanceof ItemType) {
 					ItemStack rand = ((ItemType) raw[0]).getRandom();
-					if (BLOCK_DATA_EXISTS) {
-						return Bukkit.createBlockData(rand != null ? rand.getType() : Material.STONE);
-					} else {
-						if (rand == null)
-							return Material.STONE.getData();
-
-						@SuppressWarnings("deprecation")
-						MaterialData type = rand.getData();
-						assert type != null;
-						return type;
-					}
+					return Bukkit.createBlockData(rand != null ? rand.getType() : Material.STONE);
 				} else {
 					return raw[0];
 				}
