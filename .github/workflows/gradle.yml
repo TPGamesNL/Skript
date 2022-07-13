@@ -20,7 +20,7 @@ jobs:
             - name: Run test scripts
               run: ./gradlew skriptTest
             - name: Upload Nightly Build
-              uses: actions/upload-artifact@v1
+              uses: actions/upload-artifact@v3
               if: success()
               with:
                   name: skript-nightly
