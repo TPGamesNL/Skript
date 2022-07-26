@@ -190,6 +190,7 @@ public class BukkitUnsafe {
 			if (knownNullPtr) { // Probably known Spigot bug
 				// So we continue doing whatever we were doing and hope it works
 				Skript.warning("Item " + stack.getType() + arguments + " failed modifyItemStack. This is a bug on old Spigot versions.");
+				e.printStackTrace();
 			} else { // Not known null pointer, don't just swallow
 				throw e;
 			}
