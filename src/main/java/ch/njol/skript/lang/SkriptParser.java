@@ -673,9 +673,10 @@ public class SkriptParser {
 				log.printError();
 				return null;
 			}
-			
+
+			// `b` is the first piece included, `a` is the last
 			outer: for (int b = 0; b < pieces.size();) {
-				for (int a = pieces.size() - b; a >= 1; a--) {
+				for (int a = 1; a <= pieces.size() - b; a++) {
 					if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above
 						continue;
 					final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1];
@@ -799,9 +800,10 @@ public class SkriptParser {
 				log.printError();
 				return null;
 			}
-			
+
+			// `b` is the first piece included, `a` is the last
 			outer: for (int b = 0; b < pieces.size();) {
-				for (int a = pieces.size() - b; a >= 1; a--) {
+				for (int a = 1; a <= pieces.size() - b; a++) {
 					if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above
 						continue;
 					final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1];
