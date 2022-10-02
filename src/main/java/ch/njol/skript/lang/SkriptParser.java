@@ -52,7 +52,6 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import com.google.common.primitives.Booleans;
 import org.bukkit.event.EventPriority;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -605,8 +604,9 @@ public class SkriptParser {
 	 * group 1 is null for ',', otherwise it's one of and/or/nor (not necessarily lowercase).
 	 */
 	@SuppressWarnings("null")
-	public final static Pattern listSplitPattern = Pattern.compile("\\s*,?\\s+(and|n?or)\\s+|\\s*,\\s*", Pattern.CASE_INSENSITIVE);
-	
+	public static final Pattern LIST_SPLIT_PATTERN = Pattern.compile("\\s*,?\\s+(and|n?or)\\s+|\\s*,\\s*", Pattern.CASE_INSENSITIVE);
+	public static final Pattern OR_PATTERN = Pattern.compile("\\sor\\s", Pattern.CASE_INSENSITIVE);
+
 	private final static String MULTIPLE_AND_OR = "List has multiple 'and' or 'or', will default to 'and'. Use brackets if you want to define multiple lists.";
 	private final static String MISSING_AND_OR = "List is missing 'and' or 'or', defaulting to 'and'";
 	
@@ -642,7 +642,7 @@ public class SkriptParser {
 			
 			final List<int[]> pieces = new ArrayList<>();
 			{
-				final Matcher m = listSplitPattern.matcher(expr);
+				final Matcher m = LIST_SPLIT_PATTERN.matcher(expr);
 				int i = 0, j = 0;
 				for (; i >= 0 && i <= expr.length(); i = next(expr, i, context)) {
 					if (i == expr.length() || m.region(i, expr.length()).lookingAt()) {
@@ -769,7 +769,7 @@ public class SkriptParser {
 			
 			final List<int[]> pieces = new ArrayList<>();
 			{
-				final Matcher m = listSplitPattern.matcher(expr);
+				final Matcher m = LIST_SPLIT_PATTERN.matcher(expr);
 				int i = 0, j = 0;
 				for (; i >= 0 && i <= expr.length(); i = next(expr, i, context)) {
 					if (i == expr.length() || m.region(i, expr.length()).lookingAt()) {
@@ -797,6 +797,13 @@ public class SkriptParser {
 				}
 				// results in useless errors most of the time
 //				log.printError("'" + expr + "' " + Language.get("is") + " " + notOfType(types), ErrorQuality.NOT_AN_EXPRESSION);
+				log.printError();
+				return null;
+			}
+
+			// Early check if this can be parsed as a list.
+			// The only case where multiple expressions are allowed, is when it is an 'or' list
+			if (!vi.isPlural[0] && !OR_PATTERN.matcher(expr).find()) {
 				log.printError();
 				return null;
 			}
@@ -839,11 +846,11 @@ public class SkriptParser {
 				log.printError();
 				return null;
 			}
-			
+
 			// Check if multiple values are accepted
 			// If not, only 'or' lists are allowed
 			// (both 'and' and potentially 'and' lists will not be accepted)
-			if (vi.isPlural[0] == false && !and.isFalse()) {
+			if (!vi.isPlural[0] && !and.isFalse()) {
 				// List cannot be used in place of a single value here
 				log.printError();
 				return null;
