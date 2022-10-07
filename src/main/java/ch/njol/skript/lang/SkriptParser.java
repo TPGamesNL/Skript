@@ -1434,5 +1434,8 @@ public class SkriptParser {
 	private static ParserInstance getParser() {
 		return ParserInstance.get();
 	}
+
+	@Deprecated
+	public final static Pattern listSplitPattern = LIST_SPLIT_PATTERN;
 	
 }
