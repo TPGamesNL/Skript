@@ -96,11 +96,11 @@ public class VisualEffects {
 	private static void generateTypes() {
 		List<VisualEffectType> types = new ArrayList<>();
 		Stream.of(Effect.class, EntityEffect.class, Particle.class)
-			.map(Class::getEnumConstants)
-			.flatMap(Arrays::stream)
-			.map(VisualEffectType::of)
-			.filter(Objects::nonNull)
-			.forEach(types::add);
+				.map(Class::getEnumConstants)
+				.flatMap(Arrays::stream)
+				.map(VisualEffectType::of)
+				.filter(Objects::nonNull)
+				.forEach(types::add);
 
 		for (VisualEffectType type : types) {
 			String id = type.getId();
